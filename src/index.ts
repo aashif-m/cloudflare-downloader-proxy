@@ -18,11 +18,11 @@ app.get('/download/*', async (c) => {
   
 
   try {
-    const res = await fetch(url);
-    const buffer = await res.arrayBuffer();
+    const {headers, body} = await fetch(url);
 
     c.header('Content-Disposition', `attachment; filename="${filename}"`);
-    return c.body(buffer);
+    c.header('Content-Type', headers.get('Content-Type') || 'application/octet-stream');
+    return c.body(body);
   } catch (err) {
     console.error(err);
     c.status(500);
